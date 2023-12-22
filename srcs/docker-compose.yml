@@ -1,0 +1,51 @@
+version "3.8"
+
+network:
+	incep-net:
+		driver: bridge #create an internal network usefull when your connection between the containers is in the same host
+
+services:
+	nginx:
+		build:					./requirements/nginx/
+		container_name:	nginx
+		image: 					nginx
+		restart:				unless-stopped
+		env_file:				.env
+		networks:				incep-net
+		ports:					"443:443"
+		volumes:				wordpress-vol:/var/www/html/
+		depends_on:			wordpress
+	
+	wordpress:
+		build:					./requirements/wordpress
+		container_name:	wordpress
+		image:					wordpress
+		restart:				unless-stopped
+		env_file:				.env
+		networks:				incep-net
+		volumes:				wordpress-vol:/var/www/html/
+		depends_on:			mariadb
+
+	mariadb:
+		build:					./requirements/mariadb
+		container_name:	mariadb
+		image:					mariadb
+		restart:				unless-stopped
+		env_file:				.env
+		networks:				incep-net
+		volumes:				mariadb-vol:/var/lib/mysql/
+
+volumes:
+	wordpress-vol:
+		driver: local #use default volume driver
+		driver_opts:
+			type:		none #no format in the volume
+			device:	/home/gamoreno/data/wordpress #volume location
+			o:			bind #usefull to manage files from host machine
+
+	mariadb-vol:
+		driver:	local
+		driver_opts:
+			type:		none
+			device:	/home/gamoreno/data/mariadb
+			o:			bind
