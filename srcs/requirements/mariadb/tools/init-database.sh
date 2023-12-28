@@ -4,7 +4,7 @@ echo "Starting MariaDB server"
 
 #Start mysql in the background and save the pid 
 mysqld_safe &
-mariadb_pid=$!
+# mariadb_pid=$!
 
 # waiting to start
 while ! mysqladmin ping --silent; do
@@ -39,12 +39,23 @@ echo "Setup finished."
 # while ps -p $mariadb_pid > /dev/null; do
 #     sleep 1
 # done
-echo "Waiting for MariaDB server to finish..."
-while pgrep -x mysqld_safe > /dev/null; do
-    sleep 1
-done
+# echo "Waiting for MariaDB server to finish..."
+# while pgrep -x mysqld_safe > /dev/null; do
+#     sleep 1
+# done
 
-echo "Launching Database as the main process."
+# echo "Launching Database as the main process."
 
-# Replace the current shell with mysqld_safe as the main process
+# # Replace the current shell with mysqld_safe as the main process
+# exec mysqld_safe
+
+echo "Setup finished. Stopping MySQL server started by the script."
+
+# Detener el servidor MySQL iniciado por el script
+mysqladmin shutdown
+
+echo "MySQL server stopped. Starting MySQL as the main process."
+
+# Iniciar el servidor MySQL como proceso principal
 exec mysqld_safe
+
