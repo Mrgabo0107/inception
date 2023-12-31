@@ -12,7 +12,7 @@ while ! mysqladmin ping --silent; do
 done
 
 echo "Server started. Setting up database values:"
-run_cmd="mysql -u root -p${MYSQL_ROOT_PASSWORD} -e"
+run_cmd="mysql -u root -p${GNRL_ROOT_PASSWORD} -e"
 
 # Create database
 echo "Create data base if it doesn't exist"

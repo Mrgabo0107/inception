@@ -23,7 +23,7 @@ RUN 	apt-get update && apt-get install -y \
 		default-mysql-server \
 		mariadb-client \
 		iputils-ping \
-		apt-get clean && rm -rf /var/lib/apt/lists/*
+		&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN		mkdir -p /var/www/html/ && mkdir -p /run/php && \
 		chown -R www-data:www-data /var/www/html && \
@@ -44,4 +44,4 @@ RUN		chmod +x /bin/init-wordpress.sh
 
 EXPOSE  9000
 
-CMD ["start-wordpress.sh"]
+CMD ["init-wordpress.sh"]
