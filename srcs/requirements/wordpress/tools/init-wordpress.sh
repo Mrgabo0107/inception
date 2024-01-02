@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# set -x
+set -x
 cd ${WP_PATH}
 # Function to check if MariaDB is ready
 wait_for_db() {
@@ -19,7 +19,7 @@ sleep 10
 # Check if wp-config.php exists and create the file
 if [ ! -f "${WP_PATH}/wp-config.php" ]; then
 	echo "Creating wp-config.php..."
-	su -s /bin/sh -c "wp config create --dbname=${DB_NAME} --dbuser=${WP_USER} --dbpass=${WP_PASSWORD} --dbhost=mariadb:3306 --path=${WP_PATH}" www-data
+	su -s /bin/sh -c "wp config create --dbname=${DB_NAME} --dbuser=${MYSQL_USER} --dbpass=${MYSQL_PASSWORD} --dbhost=mariadb:3306 --path=${WP_PATH}" www-data
 	chmod 644 ${WP_PATH}/wp-config.php
 fi
 
