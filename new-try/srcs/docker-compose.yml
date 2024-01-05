@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  nginx:
+    container_name:  nginx
+    build:  ./requirements/nginx/
+    image:  nginx
+    restart:  unless-stopped
+    networks:
+      - incep-net
+    ports:
+      - "443:443"
+    volumes:
+      - wordpress-vol:/var/www/html
+    depends_on:
+      - wordpress
+
+  wordpress:
+    container_name:  wordpress
+    build:  ./requirements/wordpress/
+    image:  wordpress
+    restart:  unless-stopped
+    env_file:  .env
+    networks:
+      - incep-net
+    volumes:
+      - wordpress-vol:/var/www/html
+    depends_on:
+      - mariadb
+
+  mariadb:
+    container_name:  mariadb
+    build:  requirements/mariadb/
+    image:  mariadb
+    restart:  unless-stopped
+    env_file:  .env
+    networks:
+      - incep-net
+    volumes:
+      - mariadb-vol:/var/lib/mysql
+
+volumes:
+  mariadb-vol:
+    driver:  local
+    driver_opts:
+      device:  /home/gamoreno/data/mariadb
+      type:  none
+      o:  bind
+
+  wordpress-vol:
+    driver:  local
+    driver_opts:
+      device:  /home/gamoreno/data/wordpress
+      type:  none
+      o:  bind
+
+networks:
+    incep-net:
+        driver:  bridge
