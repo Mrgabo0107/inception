@@ -1,4 +1,4 @@
-#!/bin/bash
+!/bin/bash
 
 #   Check if the wordpress database is already created
 echo "=> Checking if \`$DB_NAME\` database exists . . ."
@@ -46,3 +46,4 @@ else
 fi
 
 exec mysqld
+
