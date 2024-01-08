@@ -1,14 +1,14 @@
 #!/bin/bash
 
-echo "=> Checking if \`$DB_NAME\` database exists . . ."
+echo "Checking if \`$DB_NAME\` database exists"
 if [ ! -d "/var/lib/mysql/$DB_NAME" ]; then
 
     if ! service mariadb status > /dev/null; then
-        echo "=> MariaDB service is not running, starting it . . ."
+        echo "MariaDB service is not running, starting it"
         service mariadb start
         sleep 2
     else
-        echo "=> MariaDB service is already running."
+        echo "MariaDB service is already running."
     fi
 
     echo "MariaDB server started. Setting up user: ${DB_USER}"
@@ -28,7 +28,7 @@ if [ ! -d "/var/lib/mysql/$DB_NAME" ]; then
 
     mysqladmin -u root -p${GNRL_ROOT_PASSWORD} shutdown
 
-    echo "=> MariaDB database and user were created successfully! "
+    echo "MariaDB database and user were created successfully! "
 
     if [ -f /var/run/mysqld/mysqld.pid ]; then
         echo "=> Shutting down MariaDB..."

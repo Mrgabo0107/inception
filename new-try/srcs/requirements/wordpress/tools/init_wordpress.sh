@@ -1,43 +1,58 @@
 #!/bin/sh
 
+wait_for_db() {
+    echo "($?)" "Waiting for MariaDB..."
+    until mysqladmin ping -h"mariadb" --silent; do
+        echo "($?)" "Waiting for MariaDB..."
+        sleep 2
+    done
+    echo "MariaDB up and running"
+}
+
+wait_for_db
+sleep 10
+
 cd $WP_PATH_DIR
 
-#   Check if WordPress is installed
-echo "=> Checking for WordPress installation..."
+echo "Checking for wp-config.php"
 if [ ! -f "wp-config.php" ]; then
+    echo "Downloading WordPress"
+    su -s /bin/sh -c "wp core download --allow-root" www-data
+    wp_downloaded=true
 
-    sleep 10
-
-    echo "=> Downloading wordpress..."
-	wp core download --allow-root
-
-	echo "=> Create config file . . ."
-    wp config create --dbname=${DB_NAME} \
+    echo "Creating config file"
+    su -s /bin/sh -c "wp config create --dbname=${DB_NAME} \
                     --dbuser=${DB_USER} \
                     --dbpass=${DB_USER_PASSWORD} \
-                    --dbhost=mariadb --path=${WP_PATH_DIR} \
-                    --allow-root
-	echo "=> Done!"
+                    --dbhost=mariadb \
+                    --path=${WP_PATH_DIR}" www-data
+    echo "wp-config.php is ready"
+else
+    echo "wp-config.php is ready"
+fi
 
-	echo "=> Installing WordPress . . ."
-    wp core install --url=${DOMAIN_NAME} \
+if ! su -s /bin/sh -c "wp core is-installed" www-data; then
+    if [ ! "$wp_downloaded" = true ]; then
+        echo "Downloading WordPress"
+        su -s /bin/sh -c "wp core download --allow-root" www-data
+    fi
+    echo "Installing WordPress"
+    su -s /bin/sh -c "wp core install --url=${DOMAIN_NAME} \
                     --title=gamoreno-inception \
                     --admin_user=${WP_ADMIN_USER} \
                     --admin_password=${WP_ADMIN_PASSWORD} \
                     --admin_email=${GNRL_EMAIL} \
-                    --skip-email --allow-root
-    echo "=> Done!"
+                    --skip-email" www-data
+    echo "WordPress is installed"
 
-    echo "=> Creating new user ($WP_USER)"
-    wp user create ${WP_USER} ${GNRL_EMAIL} \
+    echo "Creating new user ($WP_USER)"
+    su -s /bin/sh -c "wp user create ${WP_USER} ${GNRL_EMAIL} \
                     --user_pass=${WP_USER_PASSWORD} \
-                    --role=author \
-                    --allow-root
-
-    echo "=> Done!"
+                    --role=author" www-data
+    echo "User created"
 
     echo "=> Activating WordPress theme . . ."
-    wp theme activate twentytwentytwo --allow-root
+    su -s /bin/sh -c "wp theme activate twentytwentytwo" www-data
 else
     echo "=> WordPress already installed and configured!"
 fi
