@@ -1,12 +1,12 @@
 #!/bin/sh
 
 wait_for_db() {
-    echo "($?)" "Waiting for MariaDB..."
+    echo "Waiting for Mariadb"
     until mysqladmin ping -h"mariadb" --silent; do
-        echo "($?)" "Waiting for MariaDB..."
+        echo "Waiting for Mariadb"
         sleep 2
     done
-    echo "MariaDB up and running"
+    echo "Mariadb up and running"
 }
 
 wait_for_db
@@ -32,7 +32,7 @@ else
 fi
 
 if ! su -s /bin/sh -c "wp core is-installed" www-data; then
-    if [ ! "$wp_downloaded" = true ]; then
+    if [ ! "$wp_downloaded" = false ]; then
         echo "Downloading WordPress"
         su -s /bin/sh -c "wp core download --allow-root" www-data
     fi
