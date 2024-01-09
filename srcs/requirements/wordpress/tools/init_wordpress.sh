@@ -54,7 +54,7 @@ if ! su -s /bin/sh -c "wp core is-installed" www-data; then
     echo "Activating WordPress theme"
     su -s /bin/sh -c "wp theme activate twentytwentytwo" www-data
 else
-    echo "=> WordPress already installed and configured!"
+    echo "WordPress already installed and configured!"
 fi
 
 exec php-fpm7.4 -F -R
