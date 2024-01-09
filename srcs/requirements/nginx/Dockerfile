@@ -5,7 +5,7 @@ RUN	apt-get update -y && apt-get install -y \
 	openssl \
 	curl \
 	&& apt-get clean \
-        && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/lib/apt/lists/* \
 	&& mkdir -p /var/www/html \
 	&& chmod -R 755 /var/www/html \
 	&& chown -R www-data:www-data /var/www/html

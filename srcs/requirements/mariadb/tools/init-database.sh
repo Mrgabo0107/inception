@@ -8,7 +8,7 @@ if [ ! -d "/var/lib/mysql/$DB_NAME" ]; then
         service mariadb start
         sleep 2
     else
-        echo "MariaDB service is already running."
+        echo "MariaDB service is already running"
     fi
 
     echo "MariaDB server started. Setting up user: ${DB_USER}"
@@ -31,13 +31,13 @@ if [ ! -d "/var/lib/mysql/$DB_NAME" ]; then
     echo "MariaDB database and user were created successfully! "
 
     if [ -f /var/run/mysqld/mysqld.pid ]; then
-        echo "=> Shutting down MariaDB..."
+        echo "Shutting down MariaDB"
         service mariadb stop
         sleep 2
     fi
 
 else
-    echo "=> \`$DB_NAME\` database exists!"
+    echo "\`$DB_NAME\` database exists!"
 fi
 
 exec mysqld

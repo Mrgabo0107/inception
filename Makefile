@@ -7,7 +7,7 @@ all:
 	@echo "$(CYAN)\n Launching \n$(RESET)"
 	@mkdir -p $(DATA_PATH)mariadb $(DATA_PATH)wordpress
 	@docker compose -f $(COMPOSE_FILE) up --build -d
-	@sleep 20
+	@sleep 17
 	@echo "\n$(BOLD)$(GREEN)Launched [ ✔ ]\n$(RESET)"
 
 start:
