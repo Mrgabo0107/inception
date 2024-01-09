@@ -2,63 +2,61 @@ version: "3.8"
 
 services:
   nginx:
-    build:  ./requirements/nginx/
     container_name:  nginx
+    build:  ./requirements/nginx/
     image:  nginx
     restart:  unless-stopped
-    env_file:  .env
-    ports:
-      - "443:443"
     networks:
       - incep-net
+    ports:
+      - "443:443"
     volumes:
-      - wordpress-vol:/var/www/html/
+      - wordpress-vol:/var/www/html
     depends_on:
       - wordpress
 
   wordpress:
-    build:  ./requirements/wordpress
     container_name:  wordpress
+    build:  ./requirements/wordpress/
     image:  wordpress
     restart:  unless-stopped
     env_file:  .env
-    ports:
-      - 9000:9000
     networks:
       - incep-net
     volumes:
-      - wordpress-vol:/var/www/html/
+      - wordpress-vol:/var/www/html
     depends_on:
       - mariadb
 
   mariadb:
-    build:  ./requirements/mariadb
     container_name:  mariadb
+    build:  requirements/mariadb/
     image:  mariadb
     restart:  unless-stopped
     env_file:  .env
-    ports:
-      - 3306:3306
     networks:
       - incep-net
     volumes:
-      - mariadb-vol:/var/lib/mysql/
+      - mariadb-vol:/var/lib/mysql
 
 volumes:
-  wordpress-vol:
-    driver:  local #use default volume driver
-    driver_opts:
-      type:  none #no format in the volume
-      device:  /home/gamoreno/data/wordpress #volume location
-      o:  bind #usefull to manage files from host machine
-
   mariadb-vol:
+    name: mariadb-vol
     driver:  local
     driver_opts:
-      type:  none
       device:  /home/gamoreno/data/mariadb
+      type:  none
+      o:  bind
+
+  wordpress-vol:
+    name: wordpress-vol
+    driver:  local
+    driver_opts:
+      device:  /home/gamoreno/data/wordpress
+      type:  none
       o:  bind
 
 networks:
-  incep-net:
-    driver: bridge
+    incep-net:
+        name: incep-net
+        driver:  bridge

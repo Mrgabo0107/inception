@@ -32,7 +32,7 @@ else
 fi
 
 if ! su -s /bin/sh -c "wp core is-installed" www-data; then
-    if [ ! "$wp_downloaded" = false ]; then
+    if [ ! "$wp_downloaded" = true ]; then
         echo "Downloading WordPress"
         su -s /bin/sh -c "wp core download --allow-root" www-data
     fi
@@ -51,10 +51,10 @@ if ! su -s /bin/sh -c "wp core is-installed" www-data; then
                     --role=author" www-data
     echo "User created"
 
-    echo "=> Activating WordPress theme . . ."
+    echo "Activating WordPress theme"
     su -s /bin/sh -c "wp theme activate twentytwentytwo" www-data
 else
     echo "=> WordPress already installed and configured!"
 fi
 
-php-fpm7.4 -F -R
+exec php-fpm7.4 -F -R
